@@ -1,0 +1,15 @@
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import toast from 'react-hot-toast';
+import Logo from '../components/Logo';
+import LegalNotice from '../components/LegalNotice';
+import { useAuth } from '../context/AuthContext';
+
+export default function LoginPage() {
+  const { login } = useAuth(); const navigate = useNavigate(); const location = useLocation(); const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [show, setShow] = useState(false); const [loading, setLoading] = useState(false);
+  async function submit(event) { event.preventDefault(); setLoading(true); try { await login(email, password); toast.success('Signed in successfully'); navigate(location.state?.from?.pathname || '/app'); } catch (error) { toast.error(error.message); } finally { setLoading(false); } }
+  return <AuthShell title="Welcome back" subtitle="Sign in to your legal-document workspace."><form onSubmit={submit} className="space-y-4"><div><label className="label">Email</label><input className="input" type="email" required value={email} onChange={event => setEmail(event.target.value)} autoComplete="email"/></div><div><div className="flex justify-between"><label className="label">Password</label><Link className="text-xs font-bold text-indigo-500" to="/forgot-password">Forgot password?</Link></div><div className="relative"><input className="input pr-11" type={show ? 'text' : 'password'} required value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password"/><button type="button" onClick={() => setShow(!show)} className="icon-btn absolute right-1 top-1" aria-label="Toggle password visibility">{show ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div></div><button className="btn btn-primary w-full" disabled={loading}>{loading ? 'Signing in…' : <>Sign in <ArrowRight size={16}/></>}</button><p className="text-center text-sm text-slate-500">New here? <Link className="font-bold text-indigo-500" to="/register">Create an account</Link></p></form></AuthShell>;
+}
+
+export function AuthShell({ title, subtitle, children }) { return <div className="grid min-h-screen bg-app lg:grid-cols-2"><div className="hidden overflow-hidden bg-slate-950 p-12 text-white lg:flex lg:flex-col"><Logo/><div className="my-auto max-w-xl"><div className="mb-5 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-indigo-200">PRIVATE · ORGANISED · VERSIONED</div><h1 className="text-5xl font-black tracking-[-.04em]">Legal documents, made understandable.</h1><p className="mt-5 text-lg leading-8 text-slate-300">Prepare documents with clear details, keep versions organised and review important terms in one workspace.</p></div><LegalNotice/></div><div className="grid place-items-center p-5"><div className="w-full max-w-md"><Link to="/" className="mb-8 block lg:hidden"><Logo/></Link><div className="panel p-6 sm:p-8"><h2 className="text-2xl font-black tracking-tight">{title}</h2><p className="mb-7 mt-2 text-sm text-slate-500">{subtitle}</p>{children}</div></div></div></div>; }

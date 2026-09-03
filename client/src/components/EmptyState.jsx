@@ -1,0 +1,2 @@
+import { FilePlus2 } from 'lucide-react';
+export default function EmptyState({title='Nothing here yet',text='Create or upload a document to get started.',action}){return <div className="panel grid min-h-64 place-items-center p-8 text-center"><div><div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-slate-100 text-slate-500 dark:bg-slate-800"><FilePlus2/></div><h3 className="text-lg font-bold">{title}</h3><p className="mx-auto mt-2 max-w-md text-sm text-slate-500">{text}</p>{action&&<div className="mt-5">{action}</div>}</div></div>}

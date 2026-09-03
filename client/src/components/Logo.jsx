@@ -1,0 +1,2 @@
+import { Scale } from 'lucide-react';
+export default function Logo({compact=false}){return <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/20"><Scale size={21}/></span>{!compact&&<div><div className="text-[15px] font-black tracking-tight text-slate-950 dark:text-white">LexSahayak</div><div className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-400">Legal documents</div></div>}</div>}

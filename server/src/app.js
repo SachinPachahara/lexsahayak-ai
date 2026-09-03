@@ -1,0 +1,38 @@
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import pinoHttp from 'pino-http';
+import crypto from 'crypto';
+import { logger } from './config/logger.js';
+import { clientOrigins, env } from './config/env.js';
+import { isDbReady } from './config/db.js';
+import { noSqlGuard } from './middleware/noSqlGuard.js';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
+import authRoutes from './routes/authRoutes.js';
+import documentRoutes from './routes/documentRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
+import { openapi } from './config/openapi.js';
+
+export const app=express();
+app.disable('x-powered-by');
+if(env.NODE_ENV==='production') app.set('trust proxy',1);
+app.use(pinoHttp({logger,genReqId:req=>req.headers['x-request-id']||crypto.randomUUID()}));
+app.use(helmet({crossOriginResourcePolicy:{policy:'same-site'},contentSecurityPolicy:{directives:{defaultSrc:["'none'"],frameAncestors:["'none'"]}}}));
+app.use(cors({credentials:true,origin(origin,cb){if(!origin||clientOrigins.includes(origin)) return cb(null,true);return cb(new Error('CORS origin denied'));},methods:['GET','POST','PATCH','PUT','DELETE','OPTIONS'],allowedHeaders:['Content-Type','Authorization','X-Request-ID']}));
+app.use(compression());
+app.use(express.json({limit:'1mb'}));app.use(express.urlencoded({extended:false,limit:'100kb'}));app.use(cookieParser());app.use(noSqlGuard);
+
+app.get('/api/v1/openapi.json',(_req,res)=>res.json(openapi));
+app.get('/api/v1/health',(_req,res)=>res.status(isDbReady()?200:503).json({success:isDbReady(),message:isDbReady()?'Service healthy':'Service unavailable',data:{api:'up',database:isDbReady()?'up':'down',aiProvider:env.AI_PROVIDER}}));
+app.use('/api/v1/auth',authRoutes);
+app.use('/api/v1/documents',documentRoutes);
+app.use('/api/v1/chat',chatRoutes);
+app.use('/api/v1/dashboard',dashboardRoutes);
+app.use('/api/v1/admin',adminRoutes);
+app.use('/api/v1/public',publicRoutes);
+app.use(notFound);app.use(errorHandler);

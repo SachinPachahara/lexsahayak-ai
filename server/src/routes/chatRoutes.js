@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { requireAuth } from '../middleware/auth.js';
+import { aiLimiter } from '../middleware/rateLimits.js';
+import { validate } from '../middleware/validate.js';
+import { chatSchema, objectId, conversationListSchema } from '../validators/documentSchemas.js';
+import { z } from 'zod';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { chat, listConversations, getConversation } from '../controllers/chatController.js';
+const r=Router();r.use(requireAuth);
+r.post('/',aiLimiter,validate(chatSchema),asyncHandler(chat));
+r.get('/',validate(conversationListSchema),asyncHandler(listConversations));
+r.get('/:id',validate(z.object({params:z.object({id:objectId})})),asyncHandler(getConversation));
+export default r;

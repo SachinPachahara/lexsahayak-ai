@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: |
+            server/package.json
+            client/package.json
+      - name: Install server
+        run: npm install --prefix server
+      - name: Install client
+        run: npm install --prefix client
+      - name: Lint
+        run: npm run lint --prefix server && npm run lint --prefix client
+      - name: Unit tests
+        run: npm run test --prefix server && npm run test --prefix client
+      - name: Build frontend
+        run: npm run build --prefix client

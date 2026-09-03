@@ -1,0 +1,18 @@
+import { Router } from 'express';
+import { requireAuth, requireRole } from '../middleware/auth.js';
+import { uploadLimiter } from '../middleware/rateLimits.js';
+import { documentUpload } from '../middleware/upload.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { validate } from '../middleware/validate.js';
+import { adminUsersQuerySchema, adminUserUpdateSchema, adminIdSchema, auditQuerySchema } from '../validators/adminSchemas.js';
+import { metrics, users, updateUser, uploadKnowledge, listKnowledge, deleteKnowledge, audits, aiUsage } from '../controllers/adminController.js';
+const r=Router();r.use(requireAuth,requireRole('admin'));
+r.get('/metrics',asyncHandler(metrics));
+r.get('/users',validate(adminUsersQuerySchema),asyncHandler(users));
+r.patch('/users/:id',validate(adminUserUpdateSchema),asyncHandler(updateUser));
+r.get('/knowledge',asyncHandler(listKnowledge));
+r.post('/knowledge',uploadLimiter,documentUpload.single('file'),asyncHandler(uploadKnowledge));
+r.delete('/knowledge/:id',validate(adminIdSchema),asyncHandler(deleteKnowledge));
+r.get('/audits',validate(auditQuerySchema),asyncHandler(audits));
+r.get('/ai-usage',asyncHandler(aiUsage));
+export default r;

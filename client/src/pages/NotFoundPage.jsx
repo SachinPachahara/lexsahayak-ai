@@ -1,0 +1,4 @@
+import { Link } from 'react-router-dom';
+import { FileQuestion } from 'lucide-react';
+import Logo from '../components/Logo';
+export default function NotFoundPage(){return <main className="min-h-screen grid place-items-center bg-slate-50 dark:bg-slate-950 px-4"><section className="panel max-w-xl w-full text-center p-10"><div className="flex justify-center mb-8"><Logo/></div><FileQuestion className="w-14 h-14 mx-auto text-indigo-500"/><p className="eyebrow mt-5">404</p><h1 className="text-3xl font-semibold mt-2">Page not found</h1><p className="text-slate-600 dark:text-slate-300 mt-3">The page may have moved, expired, or never existed.</p><div className="flex justify-center gap-3 mt-7"><Link to="/" className="btn-secondary">Home</Link><Link to="/app/dashboard" className="btn-primary">Dashboard</Link></div></section></main>}

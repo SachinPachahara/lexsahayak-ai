@@ -1,0 +1,18 @@
+import { Router } from 'express';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { validate } from '../middleware/validate.js';
+import { requireAuth } from '../middleware/auth.js';
+import { authLimiter, sensitiveAuthLimiter } from '../middleware/rateLimits.js';
+import { registerSchema, loginSchema, emailOnlySchema, resetPasswordSchema, verifyEmailSchema, preferencesSchema } from '../validators/authSchemas.js';
+import { register, login, refresh, logout, me, verifyEmail, forgotPassword, resetPassword, updatePreferences } from '../controllers/authController.js';
+const r=Router();
+r.post('/register',authLimiter,validate(registerSchema),asyncHandler(register));
+r.post('/login',sensitiveAuthLimiter,validate(loginSchema),asyncHandler(login));
+r.post('/refresh',authLimiter,asyncHandler(refresh));
+r.post('/logout',authLimiter,asyncHandler(logout));
+r.get('/me',requireAuth,asyncHandler(me));
+r.post('/verify-email',authLimiter,validate(verifyEmailSchema),asyncHandler(verifyEmail));
+r.post('/forgot-password',sensitiveAuthLimiter,validate(emailOnlySchema),asyncHandler(forgotPassword));
+r.post('/reset-password',sensitiveAuthLimiter,validate(resetPasswordSchema),asyncHandler(resetPassword));
+r.patch('/preferences',requireAuth,validate(preferencesSchema),asyncHandler(updatePreferences));
+export default r;
