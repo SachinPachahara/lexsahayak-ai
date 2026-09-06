@@ -4,13 +4,13 @@ import { AnalysisResult } from '../models/AnalysisResult.js';
 import { ShareLink } from '../models/ShareLink.js';
 import { legalTemplates, getTemplate } from '../templates/legalTemplates.js';
 import { generateLegalDocument, analyzeLegalDocument, transformClause } from '../services/aiService.js';
-import { createDocument, getOwnedDocument, saveVersion, compareVersions, attachAnalysis } from '../services/documentService.js';
+import { createDocument, getOwnedDocument, saveVersion, compareVersions, attachAnalysis, deleteOwnedDocument } from '../services/documentService.js';
 import { validateUpload } from '../utils/fileMagic.js';
 import { extractText } from '../services/fileParserService.js';
 import { toPdfBuffer, toDocxBuffer } from '../services/exportService.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ok } from '../utils/response.js';
-import { randomToken, sha256 } from '../utils/crypto.js';
+import { randomToken, sha256, decryptText } from '../utils/crypto.js';
 import { audit } from '../services/auditService.js';
 
 export async function templates(_req, res) { return ok(res, { templates: legalTemplates }); }
@@ -62,12 +62,12 @@ export async function updateStatus(req, res) {
 }
 export async function analyze(req, res) {
   const doc = await getOwnedDocument(req.params.id, req.user._id);
-  const analysis = await analyzeLegalDocument({ userId: req.user._id, documentId: doc._id, content: doc.content, redactPII: req.user.preferences?.redactPIIForAI !== false });
+  const analysis = await analyzeLegalDocument({ userId: req.user._id, documentId: doc._id, content: doc.content, language: req.user.locale, redactPII: req.user.preferences?.redactPIIForAI !== false });
   const saved = await attachAnalysis(doc._id, req.user._id, analysis);
   await audit({ userId: req.user._id, action: 'DOCUMENT_ANALYZE', resourceType: 'document', resourceId: doc._id, ip: req.ip });
   return ok(res, { analysis: saved }, 'AI-assisted analysis completed');
 }
-export async function clause(req, res) { return ok(res, { result: await transformClause({ userId: req.user._id, clause: req.body.clause, mode: req.body.mode, redactPII: req.user.preferences?.redactPIIForAI !== false }) }, `Clause ${req.body.mode} completed`); }
+export async function clause(req, res) { return ok(res, { result: await transformClause({ userId: req.user._id, clause: req.body.clause, mode: req.body.mode, language: req.user.locale, redactPII: req.user.preferences?.redactPIIForAI !== false }) }, `Clause ${req.body.mode} completed`); }
 export async function versions(req, res) { await getOwnedDocument(req.params.id, req.user._id); return ok(res, { versions: await DocumentVersion.find({ documentId: req.params.id }).select('-content').sort({ version: -1 }).lean() }); }
 export async function compare(req, res) { return ok(res, await compareVersions({ documentId: req.params.id, ownerId: req.user._id, fromVersion: req.query.from, toVersion: req.query.to })); }
 export async function exportDocument(req, res) {
@@ -80,6 +80,11 @@ export async function exportDocument(req, res) {
   res.setHeader('Content-Type', mime); res.setHeader('Content-Disposition', `attachment; filename="${doc.title.replace(/[^a-z0-9_-]/gi,'_').slice(0,80)}.${ext}"`); res.send(buffer);
 }
 export async function archive(req, res) { const doc = await getOwnedDocument(req.params.id, req.user._id); doc.status='archived'; await doc.save(); await audit({ userId:req.user._id,action:'DOCUMENT_ARCHIVE',resourceType:'document',resourceId:doc._id,ip:req.ip }); return ok(res,{document:doc},'Document archived'); }
+export async function remove(req, res) {
+  const { document, cleanup } = await deleteOwnedDocument(req.params.id, req.user._id);
+  await audit({ userId: req.user._id, action: 'DOCUMENT_DELETE', resourceType: 'document', resourceId: document._id, metadata: cleanup, ip: req.ip });
+  return ok(res, { cleanup }, 'Document and all related data permanently deleted');
+}
 export async function createShareLink(req, res) {
   const doc = await getOwnedDocument(req.params.id, req.user._id); const raw = randomToken(24);
   const expiresDays = Math.min(30, Math.max(1, Number(req.body.expiresDays || 7)));
@@ -91,5 +96,6 @@ export async function publicShared(req, res) {
   const link = await ShareLink.findOne({ tokenHash: sha256(req.params.token), revokedAt: null, $or: [{ expiresAt: null }, { expiresAt: { $gt: new Date() } }] }).select('+tokenHash').lean();
   if (!link) throw new ApiError(404, 'Share link is invalid or expired.', 'SHARE_LINK_INVALID');
   const doc = await LegalDocument.findById(link.documentId).select('title documentType content currentVersion updatedAt').lean(); if (!doc) throw new ApiError(404,'Document not found','DOCUMENT_NOT_FOUND');
+  doc.content = decryptText(doc.content);
   return ok(res,{ document: doc });
 }

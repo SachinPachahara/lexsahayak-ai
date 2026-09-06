@@ -8,10 +8,11 @@ const schema = z.object({
   CLIENT_ORIGINS: z.string().default('http://localhost:5173'),
   JWT_ACCESS_SECRET: z.string().min(16).default('development-access-secret-change-me-123456'),
   JWT_REFRESH_SECRET: z.string().min(16).default('development-refresh-secret-change-me-12345'),
+  DOCUMENT_ENCRYPTION_SECRET: z.string().min(16).default('lexsahayak-doc-enc-secret-change-me-32b!'),
   ACCESS_TOKEN_TTL: z.string().default('15m'),
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().min(1).max(30).default(7),
-  COOKIE_SECURE: z.string().default('false').transform(v => v === 'true'),
-  COOKIE_SAME_SITE: z.enum(['lax','strict','none']).default('lax'),
+  COOKIE_SECURE: z.string().default(process.env.NODE_ENV === 'production' ? 'true' : 'false').transform(v => v === 'true'),
+  COOKIE_SAME_SITE: z.enum(['lax','strict','none']).default(process.env.NODE_ENV === 'production' ? 'none' : 'lax'),
   AI_PROVIDER: z.enum(['mock', 'openai', 'huggingface']).default('mock'),
   OPENAI_API_KEY: z.string().optional().default(''),
   OPENAI_CHAT_MODEL: z.string().default('gpt-5.6-terra'),
@@ -22,6 +23,7 @@ const schema = z.object({
   AI_MAX_INPUT_CHARS: z.coerce.number().int().default(45000),
   AI_MAX_OUTPUT_TOKENS: z.coerce.number().int().default(1800),
   AI_DAILY_USER_REQUEST_LIMIT: z.coerce.number().int().default(80),
+  KB_MIN_RELEVANCE_SCORE: z.coerce.number().min(0).max(1).default(0.25),
   VECTOR_SEARCH_MODE: z.enum(['local', 'atlas']).default('local'),
   ATLAS_VECTOR_INDEX: z.string().default('legal_vector_index'),
   MAIL_MODE: z.enum(['console', 'smtp']).default('console'),
@@ -39,4 +41,4 @@ const schema = z.object({
 });
 
 export const env = schema.parse(process.env);
-export const clientOrigins = env.CLIENT_ORIGINS.split(',').map(v => v.trim()).filter(Boolean);
+export const clientOrigins = env.CLIENT_ORIGINS.split(',').map(v => v.trim().replace(/\/+$/, '')).filter(Boolean);

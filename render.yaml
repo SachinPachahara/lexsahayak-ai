@@ -11,6 +11,8 @@ services:
         value: production
       - key: COOKIE_SECURE
         value: "true"
+      - key: COOKIE_SAME_SITE
+        value: "none"
       - key: AI_PROVIDER
         value: mock
       - key: VECTOR_SEARCH_MODE

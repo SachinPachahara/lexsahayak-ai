@@ -26,7 +26,8 @@ export const openapi = {
     '/documents': { get: { summary: 'Search/filter/paginate owned documents', security: [{ bearerAuth: [] }], responses: { 200: { description: 'Document page' } } } },
     '/documents/{id}': {
       get: { summary: 'Read owned document', security: [{ bearerAuth: [] }], parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { 200: { description: 'Document' }, 404: { description: 'Not found/not owned' } } },
-      patch: { summary: 'Save edited document as a new version', security: [{ bearerAuth: [] }], parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { 200: { description: 'Saved' } } }
+      patch: { summary: 'Save edited document as a new version', security: [{ bearerAuth: [] }], parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { 200: { description: 'Saved' } } },
+      delete: { summary: 'Permanently delete an owned document and its related data', security: [{ bearerAuth: [] }], parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { 200: { description: 'Deleted' }, 404: { description: 'Not found/not owned' } } }
     },
     '/documents/{id}/analyze': { post: { summary: 'Run structured AI review', security: [{ bearerAuth: [] }], parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { 200: { description: 'Analysis' } } } },
     '/documents/clause': { post: { summary: 'Explain or improve a clause', security: [{ bearerAuth: [] }], responses: { 200: { description: 'Clause result' } } } },

@@ -9,4 +9,7 @@ const schema = new mongoose.Schema({
   ipHash: String
 }, { timestamps: true });
 schema.index({ createdAt: -1 });
+// MongoDB's TTL monitor automatically removes records after 12 months.
+// Deletion is asynchronous (typically within about a minute of expiry).
+schema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 365, name: 'audit_log_retention_12_months' });
 export const AuditLog = mongoose.model('AuditLog', schema);

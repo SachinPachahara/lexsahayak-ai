@@ -54,10 +54,11 @@
 
 ### Data/privacy
 - `.env` is ignored
+- Field-level AES-256-GCM encryption at rest for `LegalDocument.content`, `DocumentVersion.content`, and `VectorChunk.text` using authenticated encryption tags and random 96-bit IVs
 - PII masking helper for AI-bound text
 - share URLs use random tokens; stored token lookup uses a hash
 - version content hashes provide tamper/integrity evidence
-- audit logs avoid password/API-key logging
+- audit logs and AI usage records avoid password/API-key logging and are retained for 12 months through MongoDB TTL indexes
 
 ## Basic threat model
 

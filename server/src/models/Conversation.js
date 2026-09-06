@@ -3,6 +3,7 @@ const msgSchema = new mongoose.Schema({
   role: { type: String, enum: ['user','assistant'], required: true },
   content: { type: String, required: true, maxlength: 20000 },
   citations: [{ label: String, sourceId: String, chunkId: String }],
+  answerSource: { type: String, enum: ['document', 'knowledge_base', 'general_ai'] },
   createdAt: { type: Date, default: Date.now }
 }, { _id: true });
 const schema = new mongoose.Schema({

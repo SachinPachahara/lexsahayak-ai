@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mockChat } from '../src/services/mockLegalAI.js';
+import { mockChat, mockGeneralLegalAnswer } from '../src/services/mockLegalAI.js';
 
 const giftDeed = `GIFT DEED
 
@@ -18,5 +18,11 @@ describe('mock document chat', () => {
     const answer = mockChat('Who receives the gift?', [{ text: giftDeed }]);
     expect(answer).toContain('Donee');
     expect(answer).toContain('[S1]');
+  });
+
+  it('labels the general-knowledge fallback as not sourced from the knowledge base', () => {
+    const answer = mockGeneralLegalAnswer('What is a lease agreement?');
+    expect(answer).toContain('not found in the workspace knowledge base');
+    expect(answer).toContain('lease agreement is a contract');
   });
 });

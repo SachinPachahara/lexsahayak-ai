@@ -18,6 +18,8 @@ import SettingsPage from './pages/SettingsPage';
 import AdminPage from './pages/AdminPage';
 import SharedDocumentPage from './pages/SharedDocumentPage';
 import NotFoundPage from './pages/NotFoundPage';
+import GuestUploadPage from './pages/GuestUploadPage';
+import GuestDraftPage from './pages/GuestDraftPage';
 
 function Shell({children, roles}) {
   return (
@@ -37,6 +39,8 @@ export default function App(){
       <Route path="/reset-password" element={<ResetPasswordPage/>}/>
       <Route path="/verify-email" element={<VerifyEmailPage/>}/>
       <Route path="/share/:token" element={<SharedDocumentPage/>}/>
+      <Route path="/explore/upload" element={<GuestUploadPage/>}/>
+      <Route path="/explore/draft" element={<GuestDraftPage/>}/>
 
       <Route path="/app" element={<Navigate to="/app/dashboard" replace/>}/>
       <Route path="/app/dashboard" element={<Shell><DashboardPage/></Shell>}/>

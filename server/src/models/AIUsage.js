@@ -12,4 +12,6 @@ const schema = new mongoose.Schema({
   cached: { type: Boolean, default: false }
 }, { timestamps: true });
 schema.index({ userId: 1, createdAt: -1 });
+// Retain operational AI usage metrics for 12 months, then let MongoDB remove them.
+schema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 365, name: 'ai_usage_retention_12_months' });
 export const AIUsage = mongoose.model('AIUsage', schema);

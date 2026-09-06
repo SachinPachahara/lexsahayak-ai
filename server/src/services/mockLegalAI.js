@@ -83,3 +83,11 @@ export function mockChat(question, chunks) {
   // eslint-disable-next-line no-unreachable
   return `Based on [S1], the most relevant text is: “${best.text.slice(0,650)}${best.text.length > 650 ? '…' : ''}”\n\nFor your question (“${question}”), this is the closest source-backed passage available. If it does not directly answer the question, the document does not provide enough explicit information and professional review may be appropriate.`;
 }
+
+export function mockGeneralLegalAnswer(question) {
+  const normalizedQuestion = normalize(question).toLowerCase();
+  const prefix = 'This is general legal information and was not found in the workspace knowledge base. ';
+  if (/\blease agreement\b/.test(normalizedQuestion)) return `${prefix}Generally, a lease agreement is a contract in which one party gives another the right to use property for a stated period, usually in exchange for rent. Its enforceability and required terms can vary by jurisdiction and facts, so verify the applicable current law or seek professional advice for an important matter.`;
+  if (/\bcontract\b|\bagreement\b/.test(normalizedQuestion)) return `${prefix}Generally, a contract is an agreement that creates legally enforceable obligations when the applicable legal requirements are met. The required elements and remedies depend on the jurisdiction and facts, so verify the applicable current law or seek professional advice for an important matter.`;
+  return `${prefix}I can provide general legal information, but this question may depend on the jurisdiction, current law, and specific facts. Please verify it using an official current source or consult a qualified lawyer before acting on it.`;
+}

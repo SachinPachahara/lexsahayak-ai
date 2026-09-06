@@ -6,6 +6,7 @@ import { chunkText } from '../utils/chunkText.js';
 import { cosineSimilarity } from '../utils/vector.js';
 import { embedText, embeddingModelName } from './aiProvider.js';
 import { ApiError } from '../utils/ApiError.js';
+import { decryptText } from '../utils/crypto.js';
 
 export async function indexText({ scope, text, ownerId, documentId, sourceId, citation }) {
   const chunks = chunkText(text);
@@ -23,7 +24,7 @@ export async function indexText({ scope, text, ownerId, documentId, sourceId, ci
 
 async function localRetrieve({ queryEmbedding, filter, k }) {
   const candidates = await VectorChunk.find(filter).select('+embedding').limit(500).lean();
-  return candidates.map(c => ({ ...c, score: cosineSimilarity(queryEmbedding, c.embedding || []) })).sort((a,b) => b.score - a.score).slice(0,k);
+  return candidates.map(c => ({ ...c, text: decryptText(c.text), score: cosineSimilarity(queryEmbedding, c.embedding || []) })).sort((a,b) => b.score - a.score).slice(0,k);
 }
 async function atlasRetrieve({ queryEmbedding, filter, k }) {
   const mongoFilter = {};
@@ -34,7 +35,8 @@ async function atlasRetrieve({ queryEmbedding, filter, k }) {
     { $vectorSearch: { index: env.ATLAS_VECTOR_INDEX, path: 'embedding', queryVector: queryEmbedding, numCandidates: Math.max(50, k * 15), limit: k, filter: mongoFilter } },
     { $project: { text: 1, citation: 1, sourceId: 1, documentId: 1, metadata: 1, score: { $meta: 'vectorSearchScore' } } }
   ];
-  return VectorChunk.aggregate(pipeline);
+  const results = await VectorChunk.aggregate(pipeline);
+  return results.map(c => ({ ...c, text: decryptText(c.text) }));
 }
 export async function retrieve({ query, userId, documentId, includeGlobal = true, k = 5 }) {
   const queryEmbedding = await embedText(query);
