@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, FilePlus2, Files, LayoutDashboard, LogOut, Mail, Menu, MessageSquareText, Moon, Settings, ShieldCheck, Sparkles, Sun, UploadCloud, X } from 'lucide-react';
+import { ChevronRight, FilePlus2, Files, LayoutDashboard, LogOut, Menu, MessageSquareText, Moon, Settings, ShieldCheck, Sparkles, Sun, UploadCloud, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import LegalNotice from './LegalNotice';
-import LegalModal from './LegalModal';
 import Logo from './Logo';
 
 const navigation = [
@@ -27,7 +25,6 @@ function getBreadcrumb(pathname) {
 
 export default function AppLayout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [legalModal, setLegalModal] = useState(null);
   const { user, logout, theme, setTheme, updatePreferences } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -56,16 +53,7 @@ export default function AppLayout({ children }) {
         {user?.role === 'admin' && <NavLink to="/app/admin" onClick={closeMenu} className={navClass}><ShieldCheck size={18} /><span>Admin control</span></NavLink>}
       </nav>
       <div className="mt-auto p-3">
-        <LegalNotice compact />
-        <div className="mt-2.5 flex items-center justify-center gap-2 px-1 text-[11px] text-slate-400">
-          <button type="button" onClick={() => setLegalModal('privacy')} className="hover:text-indigo-600 dark:hover:text-indigo-400">Privacy</button>
-          <span>•</span>
-          <button type="button" onClick={() => setLegalModal('terms')} className="hover:text-indigo-600 dark:hover:text-indigo-400">Terms</button>
-          <span>•</span>
-          <button type="button" onClick={() => setLegalModal('disclaimer')} className="hover:text-indigo-600 dark:hover:text-indigo-400">Disclaimer</button>
-        </div>
-        <a href="mailto:s85319748@gmail.com" className="mt-2.5 flex items-center gap-2 rounded-2xl border border-slate-200/70 bg-white/60 p-3 text-xs font-semibold text-slate-600 hover:text-indigo-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300"><Mail size={15}/> Contact support</a>
-        <div className="mt-3 flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white/60 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white/60 p-3 dark:border-slate-800 dark:bg-slate-900/60">
           <div className="avatar">{user?.name?.[0]?.toUpperCase()}</div><div className="min-w-0 flex-1"><div className="truncate text-sm font-bold">{user?.name}</div><div className="truncate text-xs capitalize text-slate-500">{user?.role?.replace('_', ' ')}</div></div>
           <button type="button" className="icon-btn" onClick={signOut} aria-label="Sign out"><LogOut size={17} /></button>
         </div>
@@ -80,6 +68,5 @@ export default function AppLayout({ children }) {
       </header>
       <div className="p-4 lg:p-7">{children || <Outlet />}</div>
     </main>
-    <LegalModal type={legalModal} onClose={() => setLegalModal(null)}/>
   </div>;
 }
