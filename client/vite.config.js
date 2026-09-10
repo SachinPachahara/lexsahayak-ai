@@ -9,7 +9,9 @@ export default defineConfig(({ mode }) => ({
     globals: true,
     environment: 'jsdom',
     css: false,
+    pool: 'forks',
     include: ['src/**/*.{test,spec}.{js,jsx}']
   }
 }));
+
 

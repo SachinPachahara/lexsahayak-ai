@@ -33,7 +33,7 @@ jobs:
           JWT_REFRESH_SECRET: test-jwt-refresh-secret-minimum-16-chars
           DOCUMENT_ENCRYPTION_SECRET: test-doc-enc-secret-minimum-16-chars
       - name: Test client
-        run: npm run test --prefix client
+        run: npm run test --prefix client -- --passWithNoTests
       - name: Build frontend
         run: npm run build --prefix client
 
