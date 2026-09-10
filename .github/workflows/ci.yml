@@ -17,23 +17,32 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
           cache-dependency-path: |
-            server/package.json
-            client/package.json
+            server/package-lock.json
+            client/package-lock.json
       - name: Install server
-        run: npm install --prefix server
+        working-directory: ./server
+        run: npm install
       - name: Install client
-        run: npm install --prefix client --include=optional
-      - name: Lint
-        run: npm run lint --prefix server && npm run lint --prefix client
+        working-directory: ./client
+        run: npm install
+      - name: Lint server
+        working-directory: ./server
+        run: npm run lint
+      - name: Lint client
+        working-directory: ./client
+        run: npm run lint
       - name: Test server
-        run: npm run test --prefix server
+        working-directory: ./server
+        run: npm test
         env:
           NODE_ENV: test
           JWT_ACCESS_SECRET: test-jwt-access-secret-minimum-16-chars
           JWT_REFRESH_SECRET: test-jwt-refresh-secret-minimum-16-chars
           DOCUMENT_ENCRYPTION_SECRET: test-doc-enc-secret-minimum-16-chars
       - name: Test client
-        run: npm run test --prefix client -- --passWithNoTests
+        working-directory: ./client
+        run: npm test
       - name: Build frontend
-        run: npm run build --prefix client
+        working-directory: ./client
+        run: npm run build
 
