@@ -24,7 +24,7 @@ jobs:
         run: npm install
       - name: Install client
         working-directory: ./client
-        run: npm install
+        run: npm install --include=optional
       - name: Lint server
         working-directory: ./server
         run: npm run lint
