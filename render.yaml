@@ -25,5 +25,7 @@ services:
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
+      - key: DOCUMENT_ENCRYPTION_SECRET
+        generateValue: true
       - key: OPENAI_API_KEY
         sync: false

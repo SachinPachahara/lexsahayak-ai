@@ -7,9 +7,9 @@ import { AIUsage } from '../models/AIUsage.js';
 export async function connectDb() {
   mongoose.set('strictQuery', true);
   await mongoose.connect(env.MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
-  await AuditLog.createIndexes();
-  await AIUsage.createIndexes();
   logger.info('MongoDB connected');
+  AuditLog.createIndexes().catch(err => logger.warn({ err: err.message }, 'AuditLog index sync notice'));
+  AIUsage.createIndexes().catch(err => logger.warn({ err: err.message }, 'AIUsage index sync notice'));
 }
 
 export function isDbReady() {
