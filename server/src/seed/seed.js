@@ -61,6 +61,84 @@ DISPUTES AND CHANGES: State good-faith discussion or another agreed process, gov
 
 SIGNING: Include signature blocks, date, place, authorised signatory details and witnesses only where appropriate.`;
 
+const chequeBounceGuide = `CHEQUE BOUNCE (SECTION 138 NEGOTIABLE INSTRUMENTS ACT, 1881) — PRACTICAL LEGAL GUIDE FOR INDIA
+
+1. ESSENTIAL INGREDIENTS:
+Under Section 138 of the Negotiable Instruments Act, 1881 (NI Act), cheque dishonour is a criminal offence punishable with imprisonment up to 2 years, or fine up to twice the cheque amount, or both. The cheque must have been issued for the discharge, in whole or in part, of any legally enforceable debt or other liability. Gifts, advance security without crystallized liability, or illegal transactions do not qualify.
+
+2. STATUTORY TIMELINES (CRITICAL LIMITATION PERIODS):
+- Presentation of Cheque: Cheque must be presented to the bank within its validity period (3 months from the date of issuance in India).
+- Bank Return Memo: Bank issues a return memo citing reasons such as 'Funds Insufficient', 'Exceeds Arrangement', 'Account Closed', or 'Stop Payment'.
+- Statutory Legal Notice: The payee/holder in due course must send a formal demand notice in writing to the drawer within 30 days of receiving the bank memo of dishonour.
+- 15-Day Cure Window: The notice must demand payment of the exact cheque amount within 15 days from the date of receipt of the notice by the drawer.
+- Cause of Action: The cause of action arises only after the expiry of the 15 days if the drawer fails to make payment.
+- Filing Complaint: The criminal complaint under Section 142 of the NI Act must be filed before the competent Judicial Magistrate First Class (JMFC) or Metropolitan Magistrate (MM) within 1 month (30 days) from the date of expiry of the 15-day notice period.
+
+3. JURISDICTION (SECTION 142(2) NI ACT):
+Following the 2015 amendments, the court having territorial jurisdiction is determined by:
+- If the cheque is delivered for collection through an account: The court within whose local jurisdiction the branch of the bank where the payee maintains the account is situated.
+- If presented over the counter: The court where the drawee bank branch is situated.
+
+4. INTERIM COMPENSATION (SECTION 143A & SECTION 148):
+- Section 143A empowers the trial court to order the drawer of the cheque to pay interim compensation to the complainant not exceeding 20% of the cheque amount.
+- In appeal against conviction, Section 148 empowers the appellate court to direct deposit of a minimum of 20% of the fine or compensation awarded by the trial court.`;
+
+const stampDutyAndRegistrationGuide = `INDIAN STAMP ACT, 1899 & REGISTRATION ACT, 1908 — ESSENTIAL COMPLIANCE GUIDE
+
+1. STAMP DUTY PRINCIPLES:
+Stamp duty is an indirect tax levied by state governments in India on legal documents to make them legally admissible in courts under the Indian Stamp Act, 1899 and respective State Stamp Acts (e.g., Maharashtra Stamp Act, Karnataka Stamp Act, Delhi Stamp Rules).
+- Unstamped or Insufficiently Stamped Documents: Under Section 35 of the Indian Stamp Act, an instrument not duly stamped is inadmissible in evidence for any purpose and cannot be acted upon, registered, or authenticated until the deficient duty along with a penalty (up to 10 times the deficient amount) is paid.
+- E-Stamping: Most Indian states now use electronic stamping (e-Stamping) managed by the Stock Holding Corporation of India Limited (SHCIL) or state e-gras portals with secure tamper-proof unique certificate numbers.
+
+2. MANDATORY REGISTRATION (SECTION 17, REGISTRATION ACT, 1908):
+Registration is legally compulsory for:
+- Leases of immovable property from year to year, or for any term exceeding eleven (11) months, or reserving a yearly rent. (Note: 11-month rent agreements are commonly executed on stamp paper with notary attestation to avoid mandatory registration fees, though several states like Maharashtra mandate registration of all residential leave and licence agreements regardless of tenure).
+- Gift deeds of immovable property.
+- Instruments transferring or creating any right, title, or interest of the value of one hundred rupees and upwards in immovable property (Sale Deeds, Relinquishment Deeds, Partition Deeds).
+- Contracts to transfer immovable property for consideration under Section 53A of the Transfer of Property Act (Agreement to Sell).
+
+3. CONSEQUENCE OF NON-REGISTRATION (SECTION 49):
+Under Section 49 of the Registration Act, an unregistered document requiring mandatory registration shall not affect any immovable property comprised therein, nor confer any power to adopt, nor be received as evidence of any transaction affecting such property, except as evidence of a contract in a suit for specific performance or as evidence of any collateral transaction not required to be effected by registered instrument.`;
+
+const dpdpAct2023Guide = `DIGITAL PERSONAL DATA PROTECTION ACT, 2023 (DPDP ACT) & IT RULES — COMPLIANCE FOR DIGITAL PLATFORMS
+
+1. SCOPE AND APPLICABILITY:
+The DPDP Act, 2023 applies to the processing of digital personal data within India, and outside India if offering goods or services to data principals in India.
+
+2. CORE OBLIGATIONS OF DATA FIDUCIARIES:
+- Clear Notice & Explicit Consent: Notice accompanying or preceding consent requests must specify: (a) what personal data is collected, (b) the specific purpose of processing, (c) how data principals may exercise their rights, and (d) how to complain to the Grievance Officer and Data Protection Board of India. Notice must be available in English or any of the 22 languages specified in the Eighth Schedule to the Constitution.
+- Data Minimisation & Purpose Limitation: Data must only be processed for the specific lawful purpose for which consent was obtained.
+- Erasure / Retention Limits: Unless retention is legally required, data must be erased once the specified purpose is fulfilled or consent is withdrawn.
+- Reasonable Security Safeguards: Must implement reasonable technical and organisational security measures (including encryption, access controls, audit logs) to prevent personal data breaches.
+- Mandatory Breach Notification: In the event of a personal data breach, the Data Fiduciary must notify both the Data Protection Board of India and each affected Data Principal in the prescribed form and manner.
+- Grievance Redressal Mechanism: Every platform must publish the name and contact details (email and address) of a Grievance Officer who must respond to grievances within specified timelines.`;
+
+const reraHomebuyerGuide = `REAL ESTATE (REGULATION AND DEVELOPMENT) ACT, 2016 (RERA) — HOMEBUYER REMEDIES FOR DELAY & DEFECTS
+
+1. DELAYED POSSESSION & REMEDIES (SECTION 18):
+Under Section 18 of the RERA Act, 2016, if a promoter fails to complete or is unable to give possession of an apartment, plot, or building in accordance with the terms of the agreement for sale:
+- Right to Withdraw & Claim Full Refund: If the allottee wishes to withdraw from the project, the promoter is liable to return the full amount received with interest at the prescribed rate (typically SBI's highest Marginal Cost of Lending Rate [MCLR] + 2%) and compensation.
+- Right to Remain in Project & Receive Monthly Interest: If the allottee does not wish to withdraw, the promoter must pay interest for every month of delay until the handing over of possession.
+
+2. DEFECT LIABILITY PERIOD (SECTION 14(3)):
+In case of any structural defect or any other defect in workmanship, quality, or provision of services brought to the notice of the promoter within five (5) years from the date of handing over possession, the promoter is obligated to rectify such defects without further charge within thirty (30) days.
+
+3. MANDATORY ESCROW ACCOUNT (SECTION 4(2)(l)(D)):
+70% of the amounts realized for the real estate project from allottees must be deposited in a separate dedicated bank account in a scheduled bank to cover the cost of construction and the land cost, and can only be withdrawn in proportion to the percentage of completion of the project certified by an engineer, an architect, and a chartered accountant.`;
+
+const consumerProtectionProcedureGuide = `CONSUMER PROTECTION ACT, 2019 — PECUNIARY JURISDICTION & E-DAAKHIL FILING GUIDE
+
+1. CONSUMER COMMISSIONS PECUNIARY JURISDICTION (AS REVISED):
+- District Consumer Disputes Redressal Commission (DCDRC): Entertains complaints where the value of goods or services paid as consideration does not exceed Fifty Lakh Rupees (₹50,00,000).
+- State Consumer Disputes Redressal Commission (SCDRC): Entertains complaints where consideration paid exceeds Fifty Lakh Rupees (₹50,00,000) but does not exceed Two Crore Rupees (₹2,00,00,000).
+- National Consumer Disputes Redressal Commission (NCDRC): Entertains complaints where consideration paid exceeds Two Crore Rupees (₹2,00,00,000).
+
+2. FILING PROCEDURE & E-DAAKHIL PORTAL:
+- Online Filing: Consumers can file complaints digitally through the central government e-Daakhil portal (edaakhil.nic.in) with online fee payment.
+- Place of Filing: Unlike the 1986 Act where complaints had to be filed where the seller resided, under Section 34(2) of the 2019 Act, a consumer can file a complaint within the local limits of where the complainant resides or personally works for gain.
+- Limitation Period: A complaint must be filed within two (2) years from the date on which the cause of action arose (Section 69), unless sufficient cause for delay is condoned by the Commission.
+- Product Liability: Section 84 allows claims against product manufacturers, service providers, or sellers for harm caused by defective products or deficiency in services.`;
+
 async function upsertUser(email,name,role,password){
   let user=await User.findOne({email});
   if(!user){user=await User.create({name,email,passwordHash:await User.hashPassword(password),role,verified:true});}
@@ -88,6 +166,11 @@ async function main(){
   await seedSource(admin,'India-wide Legal Information Guide',indiaWideLegalGuide);
   await seedSource(admin,'Drafting Clause Library',clauseLibrary);
   await seedSource(admin,'Grounded AI Usage Guide',ragGuide);
+  await seedSource(admin,'Cheque Bounce (Section 138 NI Act) Guide',chequeBounceGuide);
+  await seedSource(admin,'Stamp Duty & Registration Act Compliance Guide',stampDutyAndRegistrationGuide);
+  await seedSource(admin,'Digital Personal Data Protection (DPDP) Act 2023 Guide',dpdpAct2023Guide);
+  await seedSource(admin,'RERA Homebuyer Rights & Delay Remedies Guide',reraHomebuyerGuide);
+  await seedSource(admin,'Consumer Protection Act 2019 & E-Daakhil Guide',consumerProtectionProcedureGuide);
   for(const source of officialSources) await seedOfficialSource(admin,source);
   if(demo&&!(await LegalDocument.exists({ownerId:demo._id,title:'Sample Freelance Agreement'}))){
     await createDocument({ownerId:demo._id,title:'Sample Freelance Agreement',documentType:'freelance-agreement',source:'manual',content:`SAMPLE FREELANCE AGREEMENT\n\nClient: Acme Demo Pvt. Ltd.\nFreelancer: Demo Student\nScope: Build a responsive prototype dashboard.\nFee: ₹25,000.\nPayment: 50% on start and 50% on acceptance.\nCompletion target: 2026-09-30.\n\nThe freelancer shall keep non-public project information confidential. Either party may terminate this draft arrangement with 14 days written notice. Changes should be agreed in writing.\n\nThis is demo content only and not a legal instrument.`});
