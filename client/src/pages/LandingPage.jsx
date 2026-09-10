@@ -59,18 +59,86 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
       {/* Header */}
       <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/85">
-        <div className="mx-auto flex max-w-7xl items-center px-5 py-4">
-          <Link to="/">
-            <Logo />
-          </Link>
-          <nav className="ml-auto flex items-center gap-3">
-            <Link className="btn btn-secondary hidden sm:inline-flex" to="/login">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:py-4">
+          <div className="flex items-center gap-8">
+            <Link to="/">
+              <Logo />
+            </Link>
+            {/* Desktop Direct Jump Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-2 text-xs font-bold">
+              <a
+                href="#features"
+                className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-gradient-to-r from-indigo-50/90 to-blue-50/90 px-3.5 py-1.5 text-indigo-700 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-400 hover:shadow-sm hover:shadow-indigo-500/20 dark:border-indigo-900/60 dark:from-indigo-950/60 dark:to-blue-950/40 dark:text-indigo-300"
+              >
+                <Sparkles size={13} className="text-indigo-600 dark:text-indigo-400" />
+                Features
+              </a>
+              <a
+                href="#preview"
+                className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-gradient-to-r from-sky-50/90 to-cyan-50/90 px-3.5 py-1.5 text-sky-700 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-400 hover:shadow-sm hover:shadow-sky-500/20 dark:border-sky-900/60 dark:from-sky-950/60 dark:to-cyan-950/40 dark:text-sky-300"
+              >
+                <SearchCheck size={13} className="text-sky-600 dark:text-sky-400" />
+                Live Demo
+              </a>
+              <a
+                href="#about"
+                className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-gradient-to-r from-purple-50/90 to-fuchsia-50/90 px-3.5 py-1.5 text-purple-700 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-400 hover:shadow-sm hover:shadow-purple-500/20 dark:border-purple-900/60 dark:from-purple-950/60 dark:to-fuchsia-950/40 dark:text-purple-300"
+              >
+                <Scale size={13} className="text-purple-600 dark:text-purple-400" />
+                About
+              </a>
+              <a
+                href="#security"
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-gradient-to-r from-emerald-50/90 to-teal-50/90 px-3.5 py-1.5 text-emerald-700 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400 hover:shadow-sm hover:shadow-emerald-500/20 dark:border-emerald-900/60 dark:from-emerald-950/60 dark:to-teal-950/40 dark:text-emerald-300"
+              >
+                <ShieldCheck size={13} className="text-emerald-600 dark:text-emerald-400" />
+                Security & Legal
+              </a>
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <Link
+              className="hidden sm:inline-flex items-center justify-center rounded-xl border border-indigo-200 bg-white/95 px-4 py-2 text-xs font-bold text-indigo-700 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-50/70 hover:shadow-sm dark:border-indigo-900/70 dark:bg-slate-900/90 dark:text-indigo-300 dark:hover:bg-indigo-950/60"
+              to="/login"
+            >
               Sign in
             </Link>
-            <Link className="btn btn-primary" to="/register">
-              Get started <ArrowRight size={16} />
+            <Link
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 px-4 py-2 text-xs font-black text-white shadow-md shadow-indigo-600/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-600/40 hover:brightness-110 active:translate-y-0"
+              to="/register"
+            >
+              Get started <ArrowRight size={15} />
             </Link>
-          </nav>
+          </div>
+        </div>
+
+        {/* Mobile / Tablet Quick-Jump Bar */}
+        <div className="flex lg:hidden items-center gap-2 overflow-x-auto border-t border-slate-100 px-5 py-2 text-xs font-bold text-slate-600 dark:border-slate-800 no-scrollbar">
+          <a
+            href="#features"
+            className="shrink-0 inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50/90 px-3 py-1 text-indigo-700 transition hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-950/70 dark:text-indigo-300"
+          >
+            <Sparkles size={12} /> Features
+          </a>
+          <a
+            href="#preview"
+            className="shrink-0 inline-flex items-center gap-1 rounded-full border border-sky-200 bg-sky-50/90 px-3 py-1 text-sky-700 transition hover:bg-sky-100 dark:border-sky-900 dark:bg-sky-950/70 dark:text-sky-300"
+          >
+            <SearchCheck size={12} /> Live Demo
+          </a>
+          <a
+            href="#about"
+            className="shrink-0 inline-flex items-center gap-1 rounded-full border border-purple-200 bg-purple-50/90 px-3 py-1 text-purple-700 transition hover:bg-purple-100 dark:border-purple-900 dark:bg-purple-950/70 dark:text-purple-300"
+          >
+            <Scale size={12} /> About
+          </a>
+          <a
+            href="#security"
+            className="shrink-0 inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50/90 px-3 py-1 text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-950/70 dark:text-emerald-300"
+          >
+            <ShieldCheck size={12} /> Security & Legal
+          </a>
         </div>
       </header>
 
@@ -93,11 +161,17 @@ export default function LandingPage() {
                 LexSahayak simplifies complex legal paperwork. Review contracts, draft customized agreements, and uncover hidden risks—all in one streamlined workspace.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link className="btn btn-primary px-6 py-3.5 text-sm font-bold shadow-lg shadow-indigo-500/20" to="/explore/upload">
+              <div className="mt-8 flex flex-wrap items-center gap-3.5">
+                <Link
+                  className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-indigo-500/40 hover:brightness-105 active:translate-y-0"
+                  to="/explore/upload"
+                >
                   <UploadCloud size={18} /> Upload document
                 </Link>
-                <Link className="btn btn-secondary px-6 py-3.5 text-sm font-bold" to="/explore/draft">
+                <Link
+                  className="inline-flex items-center gap-2 rounded-2xl border-2 border-indigo-200/90 bg-gradient-to-r from-indigo-50/70 to-purple-50/70 px-6 py-3.5 text-sm font-black text-indigo-800 shadow-md shadow-indigo-500/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-100/90 dark:border-indigo-800/80 dark:bg-indigo-950/40 dark:text-indigo-200 dark:hover:bg-indigo-900/60"
+                  to="/explore/draft"
+                >
                   <FileText size={18} /> Try drafting
                 </Link>
               </div>
@@ -118,7 +192,7 @@ export default function LandingPage() {
             </div>
 
             {/* Showcase UI Card */}
-            <div className="panel overflow-hidden p-6 sm:p-7 border border-slate-200/80 shadow-xl shadow-slate-200/50 dark:border-slate-800 dark:shadow-none">
+            <div id="preview" className="panel overflow-hidden p-6 sm:p-7 border border-slate-200/80 shadow-xl shadow-slate-200/50 scroll-mt-24 dark:border-slate-800 dark:shadow-none">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
                 <div className="flex items-center gap-3">
                   <div className="stat-icon h-10 w-10 shrink-0">
@@ -167,10 +241,16 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
-                <Link to="/explore/upload" className="btn btn-primary flex-1 py-2.5 text-xs font-bold">
+                <Link
+                  to="/explore/upload"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 py-2.5 px-3 text-xs font-black text-white shadow-md shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/35 hover:brightness-105 active:translate-y-0"
+                >
                   <UploadCloud size={15} /> Upload your document
                 </Link>
-                <Link to="/explore/draft" className="btn btn-secondary flex-1 py-2.5 text-xs font-bold">
+                <Link
+                  to="/explore/draft"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50/80 py-2.5 px-3 text-xs font-black text-indigo-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-100 hover:border-indigo-300 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300 dark:hover:bg-indigo-900/60"
+                >
                   <FileText size={15} /> Try drafting a document
                 </Link>
               </div>
@@ -179,7 +259,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="mx-auto max-w-7xl px-5 py-20">
+        <section id="features" className="mx-auto max-w-7xl px-5 py-20 scroll-mt-20">
           <div className="max-w-2xl">
             <div className="text-sm font-black uppercase tracking-[.2em] text-indigo-500">ALL IN ONE PLACE</div>
             <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">A complete legal document workspace.</h2>
@@ -199,7 +279,7 @@ export default function LandingPage() {
         </section>
 
         {/* About LexSahayak Section */}
-        <section className="border-t border-slate-100 bg-slate-50/60 py-20 dark:border-slate-800/80 dark:bg-slate-900/30">
+        <section id="about" className="border-t border-slate-100 bg-slate-50/60 py-20 scroll-mt-20 dark:border-slate-800/80 dark:bg-slate-900/30">
           <div className="mx-auto max-w-7xl px-5">
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1 text-xs font-bold text-indigo-700 dark:border-indigo-900/50 dark:bg-indigo-950/40 dark:text-indigo-300">
@@ -248,7 +328,7 @@ export default function LandingPage() {
         </section>
 
         {/* Legal Notice Banner */}
-        <section className="mx-auto max-w-4xl px-5 py-10">
+        <section id="security" className="mx-auto max-w-4xl px-5 py-10 scroll-mt-20">
           <LegalNotice />
         </section>
       </main>

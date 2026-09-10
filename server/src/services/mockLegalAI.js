@@ -42,6 +42,9 @@ export function mockExplainClause(clause) {
 export function mockImproveClause(clause) {
   return `${clause.trim().replace(/[.;]?$/, '')}. For clarity, the responsible party, required action, applicable deadline, notice method, exceptions, and consequences of non-performance should be stated expressly and consistently with the rest of the agreement.`;
 }
+export function mockHindiClause(clause) {
+  return `सरल हिंदी सारांश (Plain Hindi Summary):\nइस खंड (Clause) के अनुसार संबंधित पक्षों के अधिकार और कानूनी दायित्व तय किए गए हैं।\n\nमुख्य कानूनी प्रभाव:\n- यह शर्त दोनों पक्षों पर कानूनी रूप से लागू होती है।\n- किसी भी चूक, उल्लंघन या विवाद की स्थिति में दस्तावेज़ में उल्लिखित समय-सीमा और नोटिस प्रक्रिया का पालन करना अनिवार्य होगा।\n\nजांच सुझाव (Review Note): हस्ताक्षर करने से पहले यह सुनिश्चित कर लें कि यह शर्त निष्पक्ष है और इसमें कोई अनुचित या एकतरफा जुर्माना नहीं है।`;
+}
 const STOP_WORDS = new Set(['a','about','all','an','and','are','be','can','document','for','from','how','i','in','is','it','me','of','on','please','tell','the','this','to','what','when','which','who','will','with','you']);
 const normalize = value => String(value || '').replace(/\s+/g, ' ').trim();
 const questionTerms = question => normalize(question).toLowerCase().match(/[a-z0-9]{3,}/g)?.filter(word => !STOP_WORDS.has(word)) || [];

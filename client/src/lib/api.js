@@ -97,10 +97,11 @@ export async function bootstrapSession() {
     return null;
   }
 }
-export async function downloadDocument(id,format,title='document'){
+export async function downloadDocument(id,format,title='document',watermark=''){
   if(!accessToken) await refreshAccess();
-  let res=await fetch(`${API_URL}/documents/${id}/export/${format}`,{credentials:'include',headers:{Authorization:`Bearer ${accessToken}`}});
-  if(res.status===401){await refreshAccess();res=await fetch(`${API_URL}/documents/${id}/export/${format}`,{credentials:'include',headers:{Authorization:`Bearer ${accessToken}`}});}
+  const query = watermark ? `?watermark=${encodeURIComponent(watermark)}` : '';
+  let res=await fetch(`${API_URL}/documents/${id}/export/${format}${query}`,{credentials:'include',headers:{Authorization:`Bearer ${accessToken}`}});
+  if(res.status===401){await refreshAccess();res=await fetch(`${API_URL}/documents/${id}/export/${format}${query}`,{credentials:'include',headers:{Authorization:`Bearer ${accessToken}`}});}
   if(!res.ok) throw new Error('Export failed');
   const blob=await res.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${title.replace(/[^a-z0-9_-]/gi,'_')}.${format}`;a.click();URL.revokeObjectURL(url);
 }

@@ -4,7 +4,7 @@ import { redactIndianPII } from '../utils/piiRedactor.js';
 import { invokeLLM, providerInfo } from './aiProvider.js';
 import { assertDailyAIQuota, recordAIUsage } from './aiUsageService.js';
 import { generationPrompt, analysisPrompt, clausePrompt, chatPrompt, generalLegalPrompt, legalAssistantPrompt, answerCompletionPrompt } from '../ai/prompts.js';
-import { mockGenerate, mockAnalyze, mockExplainClause, mockImproveClause, mockChat, mockGeneralLegalAnswer } from './mockLegalAI.js';
+import { mockGenerate, mockAnalyze, mockExplainClause, mockImproveClause, mockHindiClause, mockChat, mockGeneralLegalAnswer } from './mockLegalAI.js';
 import { retrieve, formatContext, citationsFromChunks } from './ragService.js';
 
 function limitInput(text) {
@@ -61,11 +61,12 @@ export async function analyzeLegalDocument({ userId, documentId, content, langua
 }
 export async function transformClause({ userId, clause, mode='explain', language='en', redactPII=true }) {
   const safe = limitInput(clause);
+  const targetLang = mode === 'hindi_summary' ? 'hi' : language;
   return run({ userId, operation: `clause_${mode}`, input: safe, execute: async () => {
-    if (env.AI_PROVIDER === 'mock') return mode === 'improve' ? mockImproveClause(safe) : mockExplainClause(safe);
-    const prompt = clausePrompt({ clause: maybeRedact(safe, redactPII), mode, language });
+    if (env.AI_PROVIDER === 'mock') return mode === 'improve' ? mockImproveClause(safe) : mode === 'hindi_summary' ? mockHindiClause(safe) : mockExplainClause(safe);
+    const prompt = clausePrompt({ clause: maybeRedact(safe, redactPII), mode, language: targetLang });
     const answer = await invokeLLM(prompt);
-    return isDisclaimerOnly(answer) ? invokeLLM(answerCompletionPrompt({ question: `${mode === 'improve' ? 'Improve' : 'Explain'} this clause: ${maybeRedact(safe, redactPII)}`, language })) : answer;
+    return isDisclaimerOnly(answer) ? invokeLLM(answerCompletionPrompt({ question: `${mode === 'improve' ? 'Improve' : mode === 'hindi_summary' ? 'Summarize in Hindi' : 'Explain'} this clause: ${maybeRedact(safe, redactPII)}`, language: targetLang })) : answer;
   }});
 }
 export async function askGrounded({ userId, question, documentId, history='', language='en', redactPII=true }) {

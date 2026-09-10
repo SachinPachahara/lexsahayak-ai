@@ -5,12 +5,12 @@ export const updateDocumentSchema = z.object({ body: z.object({ content: z.strin
 export const updateStatusSchema = z.object({ params: z.object({ id: objectId }), body: z.object({ status: z.enum(['draft','completed','archived']) }) });
 export const idParamSchema = z.object({ params: z.object({ id: objectId }) });
 export const listDocumentsSchema = z.object({ query: z.object({ page: z.coerce.number().int().min(1).default(1), limit: z.coerce.number().int().min(1).max(50).default(20), status: z.enum(['draft','completed','archived']).optional(), q: z.string().trim().max(100).optional(), sort: z.enum(['updated','created','title']).default('updated') }) });
-export const clauseSchema = z.object({ body: z.object({ clause: z.string().min(3).max(12000), mode: z.enum(['explain','improve']).default('explain') }) });
+export const clauseSchema = z.object({ body: z.object({ clause: z.string().min(3).max(12000), mode: z.enum(['explain','improve','hindi_summary']).default('explain') }) });
 export const analyzeSchema = z.object({ params: z.object({ id: objectId }) });
 export const chatSchema = z.object({ body: z.object({ question: z.string().min(2).max(6000), documentId: objectId.optional(), conversationId: objectId.optional() }) });
 export const compareSchema = z.object({ params: z.object({ id: objectId }), query: z.object({ from: z.coerce.number().int().min(1), to: z.coerce.number().int().min(1) }) });
 
-export const exportSchema = z.object({ params: z.object({ id: objectId, format: z.enum(['pdf','docx']) }) });
+export const exportSchema = z.object({ params: z.object({ id: objectId, format: z.enum(['pdf','docx']) }), query: z.object({ watermark: z.string().trim().max(50).optional() }).optional() });
 export const shareSchema = z.object({ params: z.object({ id: objectId }), body: z.object({ expiresDays: z.coerce.number().int().min(1).max(30).default(7) }) });
 export const publicShareSchema = z.object({ params: z.object({ token: z.string().min(20).max(300) }) });
 export const conversationListSchema = z.object({ query: z.object({ documentId: objectId.optional() }) });

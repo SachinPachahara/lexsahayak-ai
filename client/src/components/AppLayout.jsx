@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, FilePlus2, Files, LayoutDashboard, LogOut, Menu, MessageSquareText, Moon, Settings, ShieldCheck, Sparkles, Sun, UploadCloud, X } from 'lucide-react';
+import { Calculator, ChevronRight, FilePlus2, Files, LayoutDashboard, LogOut, Menu, MessageSquareText, Moon, Settings, ShieldCheck, Sparkles, Sun, UploadCloud, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 
@@ -9,6 +9,7 @@ const navigation = [
   ['/app/templates', FilePlus2, 'Create document'],
   ['/app/documents', Files, 'My documents'],
   ['/app/upload', UploadCloud, 'Analyze upload'],
+  ['/app/stamp-duty', Calculator, 'Stamp Duty Tool'],
   ['/app/chat', MessageSquareText, 'Legal Assistant'],
   ['/app/settings', Settings, 'Settings']
 ];
@@ -18,7 +19,7 @@ function getBreadcrumb(pathname) {
   if (/^\/app\/documents\/[^/]+$/.test(pathname)) return ['My documents', 'Document workspace'];
   const labels = {
     '/app/dashboard': ['Dashboard'], '/app/templates': ['Create document'], '/app/documents': ['My documents'],
-    '/app/upload': ['Analyze upload'], '/app/chat': ['Legal Assistant'], '/app/settings': ['Settings'], '/app/admin': ['Administration']
+    '/app/upload': ['Analyze upload'], '/app/stamp-duty': ['Stamp Duty Tool'], '/app/chat': ['Legal Assistant'], '/app/settings': ['Settings'], '/app/admin': ['Administration']
   };
   return labels[pathname] || ['LexSahayak AI'];
 }

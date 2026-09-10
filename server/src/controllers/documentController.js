@@ -72,11 +72,12 @@ export async function versions(req, res) { await getOwnedDocument(req.params.id,
 export async function compare(req, res) { return ok(res, await compareVersions({ documentId: req.params.id, ownerId: req.user._id, fromVersion: req.query.from, toVersion: req.query.to })); }
 export async function exportDocument(req, res) {
   const doc = await getOwnedDocument(req.params.id, req.user._id); const format = req.params.format;
+  const watermark = req.query.watermark || null;
   let buffer, mime, ext;
-  if (format === 'pdf') { buffer = await toPdfBuffer(doc); mime = 'application/pdf'; ext = 'pdf'; }
-  else if (format === 'docx') { buffer = await toDocxBuffer(doc); mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; ext = 'docx'; }
+  if (format === 'pdf') { buffer = await toPdfBuffer({ title: doc.title, content: doc.content, signatures: doc.signatures, watermark }); mime = 'application/pdf'; ext = 'pdf'; }
+  else if (format === 'docx') { buffer = await toDocxBuffer({ title: doc.title, content: doc.content, watermark }); mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; ext = 'docx'; }
   else throw new ApiError(400, 'Export format must be pdf or docx', 'EXPORT_FORMAT_INVALID');
-  await audit({ userId: req.user._id, action: 'DOCUMENT_EXPORT', resourceType: 'document', resourceId: doc._id, metadata: { format }, ip: req.ip });
+  await audit({ userId: req.user._id, action: 'DOCUMENT_EXPORT', resourceType: 'document', resourceId: doc._id, metadata: { format, watermark }, ip: req.ip });
   res.setHeader('Content-Type', mime); res.setHeader('Content-Disposition', `attachment; filename="${doc.title.replace(/[^a-z0-9_-]/gi,'_').slice(0,80)}.${ext}"`); res.send(buffer);
 }
 export async function archive(req, res) { const doc = await getOwnedDocument(req.params.id, req.user._id); doc.status='archived'; await doc.save(); await audit({ userId:req.user._id,action:'DOCUMENT_ARCHIVE',resourceType:'document',resourceId:doc._id,ip:req.ip }); return ok(res,{document:doc},'Document archived'); }
@@ -98,4 +99,108 @@ export async function publicShared(req, res) {
   const doc = await LegalDocument.findById(link.documentId).select('title documentType content currentVersion updatedAt').lean(); if (!doc) throw new ApiError(404,'Document not found','DOCUMENT_NOT_FOUND');
   doc.content = decryptText(doc.content);
   return ok(res,{ document: doc });
+}
+
+export async function addSignature(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  const { partyName, partyRole, signatureData } = req.body;
+  if (!partyName || !signatureData) throw new ApiError(400, 'Party name and signature data are required.', 'SIGNATURE_INVALID');
+  const verificationCode = `LX-SIGN-${randomToken(4).toUpperCase()}`;
+  const ipHash = sha256(req.ip || '127.0.0.1').slice(0, 16);
+  const newSign = { partyName: partyName.trim(), partyRole: partyRole?.trim() || 'Signatory', signatureData, signedAt: new Date(), ipHash, verificationCode };
+  if (!doc.signatures) doc.signatures = [];
+  doc.signatures.push(newSign);
+  await doc.save();
+  await audit({ userId: req.user._id, action: 'DOCUMENT_SIGN', resourceType: 'document', resourceId: doc._id, metadata: { partyName, verificationCode }, ip: req.ip });
+  return ok(res, { signatures: doc.signatures, signature: newSign }, 'Document digitally signed', 201);
+}
+
+export async function removeSignature(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  doc.signatures = (doc.signatures || []).filter(s => String(s._id) !== String(req.params.signatureId));
+  await doc.save();
+  return ok(res, { signatures: doc.signatures }, 'Signature removed');
+}
+
+export async function addComment(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  const { text, clauseReference } = req.body;
+  if (!text || text.trim().length === 0) throw new ApiError(400, 'Comment text is required.', 'COMMENT_EMPTY');
+  const comment = {
+    id: randomToken(8),
+    authorName: req.user.name || 'Reviewer',
+    text: text.trim().slice(0, 1000),
+    clauseReference: clauseReference?.trim() || '',
+    status: 'open',
+    createdAt: new Date()
+  };
+  if (!doc.comments) doc.comments = [];
+  doc.comments.push(comment);
+  await doc.save();
+  return ok(res, { comments: doc.comments, comment }, 'Review note added', 201);
+}
+
+export async function updateComment(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  const comment = (doc.comments || []).find(c => c.id === req.params.commentId);
+  if (!comment) throw new ApiError(404, 'Review note not found', 'COMMENT_NOT_FOUND');
+  if (req.body.status) comment.status = req.body.status;
+  await doc.save();
+  return ok(res, { comments: doc.comments }, `Review note marked ${comment.status}`);
+}
+
+export async function removeComment(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  doc.comments = (doc.comments || []).filter(c => c.id !== req.params.commentId);
+  await doc.save();
+  return ok(res, { comments: doc.comments }, 'Review note removed');
+}
+
+export async function addMilestone(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  const { title, date, type, notes } = req.body;
+  if (!title || !date) throw new ApiError(400, 'Milestone title and date are required.', 'MILESTONE_INVALID');
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) throw new ApiError(400, 'Invalid milestone date.', 'MILESTONE_DATE_INVALID');
+  const milestone = {
+    id: randomToken(8),
+    title: title.trim().slice(0, 180),
+    date: parsedDate,
+    type: type || 'expiry',
+    status: parsedDate < new Date() ? 'overdue' : 'upcoming',
+    notes: notes?.trim()?.slice(0, 500) || '',
+    createdAt: new Date()
+  };
+  if (!doc.milestones) doc.milestones = [];
+  doc.milestones.push(milestone);
+  await doc.save();
+  await audit({ userId: req.user._id, action: 'DOCUMENT_MILESTONE_ADD', resourceType: 'document', resourceId: doc._id, metadata: { title, date: parsedDate }, ip: req.ip });
+  return ok(res, { milestones: doc.milestones, milestone }, 'Milestone deadline added', 201);
+}
+
+export async function updateMilestone(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  const milestone = (doc.milestones || []).find(m => m.id === req.params.milestoneId);
+  if (!milestone) throw new ApiError(404, 'Milestone not found', 'MILESTONE_NOT_FOUND');
+  if (req.body.status) milestone.status = req.body.status;
+  if (req.body.title) milestone.title = req.body.title.trim().slice(0, 180);
+  if (req.body.date) {
+    const parsedDate = new Date(req.body.date);
+    if (!isNaN(parsedDate.getTime())) {
+      milestone.date = parsedDate;
+      if (milestone.status !== 'completed') {
+        milestone.status = parsedDate < new Date() ? 'overdue' : 'upcoming';
+      }
+    }
+  }
+  if (req.body.notes !== undefined) milestone.notes = req.body.notes.trim().slice(0, 500);
+  await doc.save();
+  return ok(res, { milestones: doc.milestones }, 'Milestone updated');
+}
+
+export async function removeMilestone(req, res) {
+  const doc = await getOwnedDocument(req.params.id, req.user._id);
+  doc.milestones = (doc.milestones || []).filter(m => m.id !== req.params.milestoneId);
+  await doc.save();
+  return ok(res, { milestones: doc.milestones }, 'Milestone removed');
 }

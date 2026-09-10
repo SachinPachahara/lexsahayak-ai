@@ -20,7 +20,32 @@ const schema = new mongoose.Schema({
   language: { type: String, enum: ['en', 'hi'], default: 'en' },
   tags: [{ type: String, trim: true, maxlength: 40 }],
   analysisId: { type: mongoose.Schema.Types.ObjectId, ref: 'AnalysisResult' },
-  lastAccessedAt: Date
+  lastAccessedAt: Date,
+  signatures: [{
+    partyName: { type: String, required: true, trim: true },
+    partyRole: { type: String, default: 'Signatory' },
+    signatureData: { type: String, required: true },
+    signedAt: { type: Date, default: Date.now },
+    ipHash: String,
+    verificationCode: String
+  }],
+  comments: [{
+    id: { type: String, required: true },
+    authorName: { type: String, default: 'Reviewer' },
+    text: { type: String, required: true, maxlength: 1000 },
+    clauseReference: String,
+    status: { type: String, enum: ['open', 'resolved'], default: 'open' },
+    createdAt: { type: Date, default: Date.now }
+  }],
+  milestones: [{
+    id: { type: String, required: true },
+    title: { type: String, required: true, trim: true, maxlength: 180 },
+    date: { type: Date, required: true },
+    type: { type: String, enum: ['expiry', 'renewal_notice', 'lock_in', 'payment', 'milestone', 'other'], default: 'expiry' },
+    status: { type: String, enum: ['upcoming', 'completed', 'overdue'], default: 'upcoming' },
+    notes: { type: String, default: '', maxlength: 500 },
+    createdAt: { type: Date, default: Date.now }
+  }]
 }, {
   timestamps: true,
   toObject: { getters: true },

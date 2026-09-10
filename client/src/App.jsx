@@ -20,6 +20,7 @@ import SharedDocumentPage from './pages/SharedDocumentPage';
 import NotFoundPage from './pages/NotFoundPage';
 import GuestUploadPage from './pages/GuestUploadPage';
 import GuestDraftPage from './pages/GuestDraftPage';
+import StampDutyPage from './pages/StampDutyPage';
 
 function Shell({children, roles}) {
   return (
@@ -49,6 +50,7 @@ export default function App(){
       <Route path="/app/documents" element={<Shell><DocumentsPage/></Shell>}/>
       <Route path="/app/documents/:id" element={<Shell><DocumentWorkspacePage/></Shell>}/>
       <Route path="/app/upload" element={<Shell><UploadPage/></Shell>}/>
+      <Route path="/app/stamp-duty" element={<Shell><StampDutyPage/></Shell>}/>
       <Route path="/app/chat" element={<Shell><LegalChatPage/></Shell>}/>
       <Route path="/app/settings" element={<Shell><SettingsPage/></Shell>}/>
       <Route path="/app/admin" element={<Shell roles={['admin']}><AdminPage/></Shell>}/>

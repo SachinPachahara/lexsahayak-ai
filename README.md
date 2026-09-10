@@ -10,6 +10,13 @@ LexSahayak AI is a production-style B.Tech major project built with the **MERN s
 
 - Full MERN product architecture with React Router, reusable layouts/components, API layer, protected routes and responsive SaaS UI.
 - Layered Express backend with routes, controllers, services, models, middleware, validators and centralized errors.
+- **Indian State-wise Stamp Duty & Registration Engine (`/app/stamp-duty`)**: Accurate statutory rates across 25 Indian States & UTs (A-to-Z) for 13 document types with direct links to official IGRS/SHCIL portals.
+- **Digital E-Signature Pad & Verification Audit Trail**: Draw, type, or upload signatures with tamper-evident code (`LX-SIGN-XXXX`), IST timestamp, and dedicated PDF execution box.
+- **Smart Curated Indian Clause Library**: 1-click insertion of 8 battle-tested clauses (Arbitration 1996, Force Majeure, IP Assignment, Indemnity Cap, etc.).
+- **Contract Milestones & Expiry Tracker**: Proactive tracking of renewal notices, lock-ins, payment milestones, and expiration alerts.
+- **Document Review Notes & Team Comments**: Clause-specific revision comments with 1-click Resolve/Reopen tracking.
+- **Bilingual Hindi Legal Summary**: 1-click toggle translating complex legal clauses into plain Hindi for non-lawyer Indian clients.
+- **Custom Export Watermarks**: Add `DRAFT`, `CONFIDENTIAL`, or `EXECUTED` watermarks to generated PDF and DOCX downloads with zero blank-page overflow.
 - LangChain.js provider layer configured for real Hugging Face Inference Providers, with OpenAI and mock-mode fallbacks.
 - Private RAG: access control is enforced before document chunks can be retrieved for the model.
 - Structured document generation, document analysis, clause lab and source-aware document chat.
@@ -23,15 +30,19 @@ LexSahayak AI is a production-style B.Tech major project built with the **MERN s
 
 ## Core capabilities
 
-### Document lifecycle
-1. Select a legal template or upload PDF/DOCX/TXT.
-2. Generate/parse the document and save version 1.
-3. Index private chunks for retrieval.
-4. Run structured AI analysis (summary, clauses, risks, obligations, recommendations).
-5. Ask grounded questions with retrieved-source citations.
-6. Explain or rewrite a selected clause in Clause Lab.
-7. Edit, save additional versions, and compare revisions.
-8. Export to PDF/DOCX or create an expiring read-only share link.
+### Document lifecycle & SaaS features
+1. **Draft or Upload**: Select from 10+ standard legal templates or upload PDF/DOCX/TXT files with client-side preview.
+2. **Private RAG Ingestion**: Automatically index private chunks for vector retrieval without cross-tenant exposure.
+3. **Deep AI Legal Analysis**: Extract executive summary, critical clauses, liability risks, statutory obligations, and tactical recommendations.
+4. **Bilingual Hindi Summary**: 1-click toggle translating and explaining complex legal jargon in plain Hindi for Indian clients.
+5. **Context-Aware Grounded Chat**: Ask natural language questions grounded exclusively in your uploaded document text with citation references.
+6. **Clause Lab & Smart Clause Library**: Explain, simplify, or rewrite clauses, or insert 8 battle-tested standard Indian clauses with 1 click.
+7. **Document Review Notes**: Collaborate with inline paragraph-level comments and resolution tracking (`Resolve / Reopen`).
+8. **Digital E-Signature Pad**: Sign directly on an HTML5 canvas, type with cursive font, or upload an image seal with tamper-evident audit badge (`LX-SIGN-XXXX`).
+9. **Contract Expiry & Milestones Tracker**: Track renewal deadlines, lock-in periods, notice periods, and payment milestones proactively.
+10. **State-wise Stamp Duty Estimator (`/app/stamp-duty`)**: Compute exact stamp duty and registration fees across 25 Indian states for 13 legal instruments with direct links to official government e-Stamping portals.
+11. **Export & Watermarks**: Download clean PDF/Word documents with customizable watermarks (`DRAFT`, `CONFIDENTIAL`, `EXECUTED`) and complete digital execution audit seals.
+12. **Expiring Secure Links**: Generate time-limited, random-token read-only public share links for external stakeholders.
 
 ### Included legal templates
 - Rent / lease agreement
@@ -45,7 +56,23 @@ LexSahayak AI is a production-style B.Tech major project built with the **MERN s
 - Internship agreement
 - Legal notice
 
-Templates are starting points for educational/product demonstration, not jurisdiction-specific legal advice.
+### Indian Stamp Duty & Registration Categories (`/app/stamp-duty`)
+Covers **25 Indian States and UTs** (arranged A-to-Z) across **13 statutory instruments**:
+- Property Sale Deed / Conveyance
+- Residential Tenancy (Up to 11 Months)
+- Residential Lease (> 11 Months)
+- Commercial Lease Agreement
+- Gift Deed (Family Transfer with blood-relation concessions)
+- General Power of Attorney (GPA)
+- Promissory Note (On Demand)
+- Affidavit / Sworn Declaration
+- Partnership Deed / LLP Agreement
+- NDA & Commercial Service Agreement
+- Mortgage Deed / Loan Agreement
+- Relinquishment / Release Deed
+- Will / Testamentary Instrument
+
+Templates and calculators are starting points for educational and assistive workflows, backed by direct links to official State Registration (IGRS / SHCIL) portals.
 
 ## Technology stack
 
@@ -254,8 +281,10 @@ Base URL: `/api/v1`
 | Account | `GET /auth/me`, `PATCH /auth/preferences`, verify/reset flows |
 | Documents | `GET /documents`, `POST /documents/generate`, `POST /documents/upload` |
 | Intelligence | `POST /documents/:id/analyze`, `POST /documents/clause` |
+| Execution & Signing | `POST /documents/:id/signatures`, `DELETE /documents/:id/signatures/:sigId` |
+| Collaboration | `POST /documents/:id/comments`, `PATCH /documents/:id/comments/:cId/resolve` |
 | Versions | `GET /documents/:id/versions`, `GET /documents/:id/compare` |
-| Export/share | `GET /documents/:id/export/:format`, `POST /documents/:id/share` |
+| Export & Watermark | `GET /documents/:id/export/:format?watermark=CONFIDENTIAL`, `POST /documents/:id/share` |
 | Chat | `POST /chat`, `GET /chat` |
 | Dashboard | `GET /dashboard` |
 | Admin | users, metrics, knowledge base, audits, AI usage under `/admin/*` |
@@ -300,14 +329,16 @@ Admin authorization is enforced in Express middleware; hiding the frontend menu 
 
 ## Differentiators for viva/interviews
 
-1. **Private RAG rather than generic chat:** retrieval scopes are enforced before LLM context assembly.
-2. **Privacy Shield:** recognizable PII can be redacted before external inference.
-3. **Version integrity:** SHA-256 hashes make saved revision integrity demonstrable.
-4. **Grounding transparency:** chat returns retrieval citations and confidence/limitations rather than presenting unsupported output as certain.
-5. **Cost governance:** per-user quotas, token/output caps and AI usage telemetry.
-6. **Secure sharing:** random, expiring, read-only links rather than public document IDs.
-7. **Provider abstraction:** local demo mode and a real LangChain provider use the same product flows.
-8. **Operational design:** health checks, structured logs, audit trails, CI and deployment configuration are included.
+1. **State-Specific Statutory Stamp Duty Engine:** Solves the real-world Indian problem of multi-state stamp duty variations (25 states, 13 instruments) with direct official e-Stamping portal verification.
+2. **End-to-End Execution with Digital E-Signatures:** In-browser canvas/cursive signature capture with tamper-evident audit trail codes (`LX-SIGN-XXXX`), IST timestamps, and dedicated PDF signature execution blocks.
+3. **Smart Curated Indian Clause Library:** Provides battle-tested clauses (Arbitration Act 1996, Indian Contract Act provisions) with 1-click preview and contextual insertion.
+4. **Bilingual Hindi Summarizer:** Breaks the language barrier for Indian citizens by summarizing complex legal jargon into plain, non-lawyer Hindi.
+5. **Contract Lifecycle & Milestone Tracking:** Proactively detects and manages contract renewal windows, lock-ins, notice periods, and payment milestones.
+6. **Private RAG rather than generic chat:** Retrieval scopes are enforced before LLM context assembly.
+7. **Privacy Shield:** Recognizable PII (PAN, Aadhaar, phone, email) can be redacted before external inference.
+8. **Version integrity:** SHA-256 hashes make saved revision integrity demonstrable.
+9. **Grounding transparency:** Chat returns retrieval citations and confidence/limitations rather than presenting unsupported output as certain.
+10. **Cost governance & Operational design:** Per-user quotas, rate limiting, health checks, structured audit logs, CI and deployment configuration are included.
 
 ## Limitations you should state in the viva
 
