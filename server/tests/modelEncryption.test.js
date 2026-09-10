@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { LegalDocument } from '../src/models/LegalDocument.js';
 import { DocumentVersion } from '../src/models/DocumentVersion.js';
 import { VectorChunk } from '../src/models/VectorChunk.js';
-import { encryptText, decryptText } from '../src/utils/crypto.js';
 
 describe('Document models encryption at rest', () => {
   it('encrypts content on LegalDocument schema set', () => {
