@@ -27,7 +27,6 @@
     "express-rate-limit": "^8.0.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "lexsahayak-ai": "file:..",
     "mammoth": "^1.10.0",
     "mongoose": "^9.9.2",
     "multer": "^2.0.2",
